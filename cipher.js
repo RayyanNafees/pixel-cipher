@@ -2,10 +2,10 @@ function pixel(num) {
   console.assert(num <= 16777216, "Number should be less than 16777216");
 
   b = num;
-  g = num; //256
-  r = g; //256
+  g = Math.floor(num / 256);
+  r = Math.floor(g / 256);
 
-  return r % 256, g % 256, b % 256;
+  return [r % 256, g % 256, b % 256];
 }
 
 function visualise(R, G, B, A = 255, callback) {
