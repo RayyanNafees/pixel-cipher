@@ -8,7 +8,7 @@ function pixel(num) {
   return r % 256, g % 256, b % 256;
 }
 
-function visualise(R, G, B, A = 255) {
+function visualise(R, G, B, A = 255, callback) {
   var width = 400,
     height = 400,
     buffer = new Uint8ClampedArray(width * height * 4); // have enough bytes
@@ -40,6 +40,6 @@ function visualise(R, G, B, A = 255) {
   ctx.putImageData(idata, 0, 0);
 
   var dataUri = canvas.toDataURL(); // produces a PNG file
-  image.onload = imageLoaded; // optional callback function
+  image.onload = callback; // optional callback function
   image.src = dataUri;
 }
