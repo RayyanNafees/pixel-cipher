@@ -43,3 +43,43 @@ function visualise(R, G, B, A = 255, callback) {
   image.onload = callback; // optional callback function
   image.src = dataUri;
 }
+
+function readBlob(opt_startByte, opt_stopByte) {
+
+    var files = document.getElementById('files').files;
+    if (!files.length) {
+      alert('Please select a file!');
+      return;
+    }
+
+    var file = files[0];
+    var start = parseInt(opt_startByte) || 0;
+    var stop = parseInt(opt_stopByte) || file.size - 1;
+
+    var reader = new FileReader();
+    reader.onloadend = function (evt) {
+
+      if (evt.target.readyState == FileReader.DONE) { // DONE == 2
+        var a = new Uint8Array(evt.target.result)
+        var binary = ""
+        for (var i =0; i <= a.length; i++) {
+          binary += Number(a[i]).toString(2)
+        }
+        document.getElementById('byte_content').textContent = binary;
+        document.getElementById('byte_range').textContent = ['Read bytes: ', start + 1, ' - ', stop + 1,
+          ' of ', file.size, ' byte file'].join('');
+      }
+    };;
+
+
+    var blob = file.slice(start, stop);
+    var a = reader.readAsArrayBuffer(blob)
+  }
+
+  document.querySelector('.readBytesButtons').addEventListener('click', function (evt) {
+    if (evt.target.tagName.toLowerCase() == 'button') {
+      var startByte = evt.target.getAttribute('data-startbyte');
+      var endByte = evt.target.getAttribute('data-endbyte');
+      readBlob(startByte, endByte);
+    }
+  }, false);
