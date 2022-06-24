@@ -13,8 +13,8 @@ the width and height of the image depends on these
 ]
 '''
 
-def pixel(num: int):
-    assert num <= 16777216, 'Number should be less than 16777216'
+def pixel(num: int) -> tuple[int]:
+    assert num < 16777216, 'Number should be less than 16777216'
 
     b= num
     g = num//256
@@ -23,7 +23,7 @@ def pixel(num: int):
     return (r%256, g%256, b%256)
 
 
-def visualise(pixels: list =[], path: str ='new.png', dptype=np.uint8):
+def visualise(pixels: tuple[int] =[], path: str ='new.png', dptype=np.uint8):
     # Convert the pixels into an array using numpy
     array = np.array(pixels, dtype=dptype)
 
