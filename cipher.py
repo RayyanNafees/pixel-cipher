@@ -27,6 +27,8 @@ def visualise(pixels: list =[], path: str ='new.png', dptype=np.uint8):
     # Convert the pixels into an array using numpy
     array = np.array(pixels, dtype=dptype)
 
+    #TODO: matrix = np.asmatrix(array)
+
     # Use PIL to create an image from the new array of pixels
     new_image = Image.fromarray(array)
     new_image.save(path)
