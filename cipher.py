@@ -33,3 +33,9 @@ def visualise(pixels: tuple[int] =[], path: str ='new.png', dptype=np.uint8):
     # Use PIL to create an image from the new array of pixels
     new_image = Image.fromarray(array)
     new_image.save(path)
+
+
+#! Not working !!!!!!!!!!!!!!
+
+file_to_int = lambda path: int.from_bytes(open(path, 'rb').read(2), byteorder='big')
+int_to_file = lambda n, path: open(path, 'wb').write(n.to_bytes(2, byteorder='big'))
