@@ -100,17 +100,26 @@ def to_anybase(n: int, base: int=37, base_chars=string.printable, char_func=None
 
 
 
-def from_printable_base(n: int, base: int=37) -> dict[int, int]:
-    '''Reverse of to_multibase
+def from_any_base(n: int, base: int=37, base_chars=string.printable, num_func: function[[str], int]=None) -> int:
+    '''Reverse of to_any_base func
 
     Args:
-        n (int): Converted integer
-        base (int, optional): Base it was converted from. Defaults to 37.
+        n (int): C0onverted number
+        base (int, optional): It's base. Defaults to 37.
+        base_chars (list, optional): Base characters used. Defaults to string.printable.
+        num_func (function, optional): Fucntion to give numeric value from a char. Defaults to None.
 
     Returns:
-        dict[int, int]: Returns the power values for it
+        int: Returns the integer it was converted from
     '''
-    pass
+    strn = str(n)
+    num = 0
+
+    for n,i in enumerate(base_chars):
+        mul = num_func or (lambda char: base_chars.index(char))
+        num += (base**n)*mul(i)
+    return num
+
 
 
 def digitify(pow_dict: dict[int, int], base: int=2, formatter=strify, char_func=None) -> str:
