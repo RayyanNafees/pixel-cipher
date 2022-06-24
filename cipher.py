@@ -28,6 +28,7 @@ def visualise(pixels: tuple[int] =[], path: str ='new.png', dptype=np.uint8):
     array = np.array(pixels, dtype=dptype)
 
     #TODO: matrix = np.asmatrix(array)
+    #TODO: find a way to convert em to matrix
 
     # Use PIL to create an image from the new array of pixels
     new_image = Image.fromarray(array)
