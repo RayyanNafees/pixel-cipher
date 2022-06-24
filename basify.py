@@ -1,11 +1,12 @@
 from math import log, ceil
 import string
 from unicodedata import digit
+from cipher import pixel
 
 #* NOTE THAT math.log CAN GET THE POWER OF INTEGER OF ANY BASE
 
 strify = lambda arr: ''.join(str(i) for i in arr)
-
+pixelise = lambda digits: [pixel(d) for d in digits]
 
 def tobase(n, base=3):
     '''Converts integers till any base till base-10
@@ -37,7 +38,7 @@ def tobase(n, base=3):
     return pow_dict
 
 
-def till_multibase(n: int, base: int=11) -> dict[int, int]:
+def to_printable_base(n: int, base: int=11) -> dict[int, int]:
   
     base_chars = string.printable
     assert base<= (len(base_chars)), 'Base out of range'
@@ -48,8 +49,8 @@ def till_multibase(n: int, base: int=11) -> dict[int, int]:
         
         power = int(log(n, base)) # 6
         
-        mul = n//base**power
-        _mul = base_chars[mul]
+        mul = n//base**power    # value
+        _mul = base_chars[mul]  # digit representation
         
         pow_dict[power] = _mul
 
@@ -58,8 +59,41 @@ def till_multibase(n: int, base: int=11) -> dict[int, int]:
     return pow_dict
 
 
+def to_anybase(n: int, base: int=37, base_chars=string.printable):
+
+    assert base<= (len(base_chars)), 'Base out of range'
+
+    pow_dict = {}
+
+    while n:
+        
+        power = int(log(n, base)) # 6
+        
+        mul = n//base**power    # value
+        _mul = base_chars[mul]  # digit representation
+        
+        pow_dict[power] = _mul
+
+        n -=  (base**power)*mul # n = 4
+
+    return pow_dict
+
+
+
+def from_printable_base(n: int, base: int=37) -> dict[int, int]:
+    '''Reverse of to_multibase
+
+    Args:
+        n (int): Converted integer
+        base (int, optional): Base it was converted from. Defaults to 37.
+
+    Returns:
+        dict[int, int]: Returns the power values for it
+    '''
+    pass
+
+
 def digitify(pow_dict: dict[int, int], base: int=2, formatter=strify) -> str:
-    print(pow_dict)
 
     strlen = max(pow_dict.keys())
     dig_arr = [0]*(strlen+1)
@@ -81,7 +115,7 @@ def digitify(pow_dict: dict[int, int], base: int=2, formatter=strify) -> str:
     return formatter(dig_arr)
 
 binify = lambda n, base=2: digitify(tobase(n, base), base)
-multify = lambda n, base=11: digitify(till_multibase(n, base), base)
+multify = lambda n, base=11: digitify(to_printable_base(n, base), base)
 
 test = lambda n=1000, base=11: print(n == int(str(multify(n, base)),base))
 
