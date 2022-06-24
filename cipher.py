@@ -35,7 +35,11 @@ def visualise(pixels: tuple[int] =[], path: str ='new.png', dptype=np.uint8):
     new_image.save(path)
 
 
-#! Not working !!!!!!!!!!!!!!
+#! Not working !!!!!!!!!!!!!! Corrupting files
 
 file_to_int = lambda path: int.from_bytes(open(path, 'rb').read(2), byteorder='big')
 int_to_file = lambda n, path: open(path, 'wb').write(n.to_bytes(2, byteorder='big'))
+
+test = lambda file, ext: int_to_file(file_to_int(f'{file}.{ext}'), f'{file}2.{ext}')
+
+test('new','png')
