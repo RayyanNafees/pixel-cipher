@@ -1,5 +1,8 @@
 from PIL import Image
 import numpy as np
+import math
+
+VAL = 2.408116385911179
 
 ''' 
 pixels should be of the form
@@ -37,9 +40,29 @@ def visualise(pixels: tuple[int] =[], path: str ='new.png', dptype=np.uint8):
 
 #! Not working !!!!!!!!!!!!!! Corrupting files
 
-file_to_int = lambda path: int.from_bytes(open(path, 'rb').read(2), byteorder='big')
-int_to_file = lambda n, path: open(path, 'wb').write(n.to_bytes(2, byteorder='big'))
+# file_to_int = lambda path: int.from_bytes(open(path, 'rb').read(5), byteorder='big')
+
+def file_to_int(path: str, size:int=None) -> int:
+    with open(path, 'rb') as b:
+        bins = b.read(b.__sizeof__())
+    
+    return int.from_bytes(bins, byteorder='big')
+
+
+def int_to_file(n: int, path: str) -> None:
+    intlen = len(str(n))
+    
+    # f = lambda n: 10*n//24
+    f = lambda n: math.floor(n/2.408116385911179)
+
+    print(intlen, f(intlen) )
+    byts = n.to_bytes(f(intlen), byteorder='big')
+
+    with open(path, 'wb') as b:
+        b.write(byts)
+
+# int_to_file = lambda n, path: open(path, 'wb').write(n.to_bytes(5, byteorder='big'))
 
 test = lambda file, ext: int_to_file(file_to_int(f'{file}.{ext}'), f'{file}2.{ext}')
 
-test('new','png')
+test('cipher','js')
