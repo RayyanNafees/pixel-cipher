@@ -1,10 +1,10 @@
-from PIL import Image
-import numpy as np
 import math
+import numpy as np
+from PIL import Image
 
 VAL = 2.408116385911179
 
-''' 
+'''
 pixels should be of the form
 the width and height of the image depends on these
 
@@ -16,53 +16,78 @@ the width and height of the image depends on these
 ]
 '''
 
-def pixel(num: int) -> tuple[int]:
-    assert num < 16777216, 'Number should be less than 16777216'
 
-    b= num
-    g = num//256
-    r = g //256
+def pixel(n: int) -> tuple[int]:
+    '''represents a number as a pixel character
 
-    return (r%256, g%256, b%256)
+    Args:
+        num (int): Numeric value of the pixel
+
+    Returns:
+        tuple[int]: A list of RGB Value
+    '''
+    assert n < 16777216, 'Number should be less than 16777216'
+
+    b = n
+    g = n//256
+    r = g // 256
+
+    return (r % 256, g % 256, b % 256)
 
 
-def visualise(pixels: tuple[int] =[], path: str ='new.png', dptype=np.uint8):
+def visualise(pixels: list[tuple[int]], path: str = 'new.png'):
+    '''Converts an array of pixel valuea to real image
+
+    Args:
+        pixels (tuple[int], optional): Array of pixel values. Defaults to [].
+        path (str, optional): Path to the new file. Defaults to 'new.png'.
+        dptype (_type_, optional): Numpy Array dptype. Defaults to np.uint8.
+    '''
     # Convert the pixels into an array using numpy
-    array = np.array(pixels, dtype=dptype)
+    array = np.array(pixels, dtype=np.uint8)
 
-    #TODO: matrix = np.asmatrix(array)
-    #TODO: find a way to convert em to matrix
+    # np.reshape(array, len(array) )
 
     # Use PIL to create an image from the new array of pixels
     new_image = Image.fromarray(array)
     new_image.save(path)
 
 
-#! Not working !!!!!!!!!!!!!! Corrupting files
+def file_to_int(path: str) -> int:
+    '''Converts bytes inside a file to integers
 
-# file_to_int = lambda path: int.from_bytes(open(path, 'rb').read(5), byteorder='big')
+    Args:
+        path (str): Path to the file
 
-def file_to_int(path: str, size:int=None) -> int:
-    with open(path, 'rb') as b:
-        bins = b.read(b.__sizeof__())
-    
+    Returns:
+        int: The bytes of the file as integers
+    '''
+    with open(path, 'rb') as file:
+        bins = file.read(file.__sizeof__())
+
     return int.from_bytes(bins, byteorder='big')
 
 
-def int_to_file(n: int, path: str) -> None:
-    intlen = len(str(n))
-    
-    # f = lambda n: 10*n//24
+def int_to_file(num: int, path: str) -> None:
+    '''Makes the file from integeral value of its bytes
+
+    Args:
+        n (int): Integer Value
+        path (str): Path to the file
+    '''
+    intlen = len(str(num))
+
     f = lambda n: math.floor(n/2.408116385911179)
 
-    print(intlen, f(intlen) )
-    byts = n.to_bytes(f(intlen), byteorder='big')
+    print(intlen, f(intlen))
+
+    byts = num.to_bytes(f(intlen), byteorder='big')
 
     with open(path, 'wb') as b:
         b.write(byts)
 
-# int_to_file = lambda n, path: open(path, 'wb').write(n.to_bytes(5, byteorder='big'))
 
-test = lambda file, ext: int_to_file(file_to_int(f'{file}.{ext}'), f'{file}2.{ext}')
+test = lambda file, ext:  int_to_file(file_to_int(f'{file}.{ext}'), f'{file}2.{ext}')
 
-test('cipher','js')
+
+test('cipher', 'js')
