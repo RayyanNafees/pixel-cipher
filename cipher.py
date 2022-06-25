@@ -63,7 +63,7 @@ def file_to_int(path: str) -> int:
         int: The bytes of the file as integers
     '''
     with open(path, 'rb') as file:
-        bins = file.read(file.__sizeof__())
+        bins = file.read()
 
     return int.from_bytes(bins, byteorder='big')
 
