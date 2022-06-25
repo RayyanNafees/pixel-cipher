@@ -4,17 +4,17 @@ from PIL import Image
 
 VAL = 2.408116385911179
 
-'''
-pixels should be of the form
-the width and height of the image depends on these
+def mid_factor(n):
+    '''Gives the best factor of rows x columns to keep the 2d array squaric
 
-[
-   [(54, 54, 54), (232, 23, 93), (71, 71, 71), (168, 167, 167)],
-   [(204, 82, 122), (54, 54, 54), (168, 167, 167), (232, 23, 93)],
-   [(71, 71, 71), (168, 167, 167), (54, 54, 54), (204, 82, 122)],
-   [(168, 167, 167), (204, 82, 122), (232, 23, 93), (54, 54, 54)]
-]
-'''
+    Args:
+        n (_type_): Length of the array
+
+    Returns:
+        _type_: Factors of rows and columns
+    '''
+    factors = [(i, n//i) for i in range(2,n) if not n%i]
+    return factors[len(factors)//2]
 
 
 def pixel(n: int) -> tuple[int]:
@@ -45,6 +45,7 @@ def visualise(pixels: list[tuple[int]], path: str = 'new.png'):
     '''
     # Convert the pixels into an array using numpy
     array = np.array(pixels, dtype=np.uint8)
+    array2d = np.reshape(array, mid_factor(len(array)))
 
     # np.reshape(array, len(array) )
 
