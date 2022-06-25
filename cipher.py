@@ -50,7 +50,7 @@ def visualise(pixels: list[tuple[int]], path: str = 'new.png'):
     # np.reshape(array, len(array) )
 
     # Use PIL to create an image from the new array of pixels
-    new_image = Image.fromarray(array)
+    new_image = Image.fromarray(array2d)
     new_image.save(path)
 
 
