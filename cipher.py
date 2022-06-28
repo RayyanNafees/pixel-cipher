@@ -91,4 +91,4 @@ def int_to_file(num: int, path: str) -> None:
 test = lambda file, ext:  int_to_file(file_to_int(f'{file}.{ext}'), f'{file}2.{ext}')
 
 
-test('cipher', 'js')
+# test('cipher', 'js')

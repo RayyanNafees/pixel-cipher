@@ -1,14 +1,23 @@
 from math import log
 import string
 from types import FunctionType
-from cipher import pixel
 from functools import partial
 
 # * NOTE THAT math.log CAN GET THE POWER OF INTEGER OF ANY BASE
 
 
-def strify(arr): return ''.join(str(i) for i in arr)
+
+def pixel(n):
+    '''Converts an integer to a pixel representation'''
+    b = n
+    g = n//256
+    r = g // 256
+
+    return (r % 256, g % 256, b % 256)
+
 def pixelise(digits): return [pixel(d) for d in digits]
+
+def strify(arr): return ''.join(str(i) for i in arr)
 
 
 def isiterable(sequence):
