@@ -1,6 +1,10 @@
-from click import FileError
 import basify
-from cipher import file_to_int as fileint, int_to_file as intfile
+from filedata import (
+    file_to_int as fileint,
+    int_to_file as intfile,
+    visualise,
+    getrgb,
+    unpixel)
 
 
 def compress(path, out=None):
@@ -50,7 +54,7 @@ def compress_ascii(path, out) -> None:
     if not out:
         out = path+'.ascii'
     else:
-        return FileError(
+        return NameError(
             "Extension can't be recognised, enter an output file name")
 
     with open(out, 'w', encoding='utf-8') as o:
@@ -72,15 +76,44 @@ def uncompress_ascii(path: str, out):
     if not out and path.endswith('.ascii'):
         out = path[:-6]
     else:
-        return FileError(
+        return NameError(
             "Extension can't be recognised, enter an output file name")
 
     data = basify.from_anybase(compressed_data, 65536, None, ord)
     return intfile(data, out)
 
-#! Most imp functions left
 
-def pixelize(path, out): pass
+def pixelize(path: str, out: str = None) -> None:
+    '''COnvert the data inside a file image
+
+    Args:
+        path (str): File path to convert to pixels
+        out (str, optional): The output path of the converted image
+    '''
+    data = fileint(path)
+    pixels = list(basify.base_pixel(data).values())
 
 
-def unpixelize(path, out): pass
+    if not out:
+        out = path+'.png'
+
+    visualise(pixels, out)
+
+
+def unpixelize(path: str, out: str) -> None:
+    '''Converts the data inside the image file back to original file
+
+    Args:
+        path (str): Path to the compressed data image
+        out (str): The path for the output file
+    '''
+
+    pixels = getrgb(path)
+    # data = sum(unpixel(pixel) for pixel in pixels)
+
+    data=basify.from_anybase(pixels, 16777216, None, unpixel)
+
+    if not out and path.endswith('.png'):
+        out=path[:-4]
+
+    intfile(data, out)

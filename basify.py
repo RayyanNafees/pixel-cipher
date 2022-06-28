@@ -2,7 +2,6 @@ from math import log
 import string
 from types import FunctionType
 from functools import partial
-from cipher import file_to_int as fileint
 
 # * NOTE THAT math.log CAN GET THE POWER OF INTEGER OF ANY BASE
 
@@ -138,8 +137,10 @@ base_ascii = partial(to_anybase, base=65536, base_chars=None, char_func=chr)
 base_unicode = partial(to_anybase, base=1114111,
                        base_chars=None, char_func=chr)
 
+base_pixel = partial(to_anybase, base=16777216,
+                     base_chars=None, char_func=pixel)
 
-#! So much vulnerability in this
+
 def from_anybase(n: int, base: int = 37, base_chars=string.printable, num_func=None) -> int:
     '''Reverse of to_any_base func
 
@@ -156,7 +157,7 @@ def from_anybase(n: int, base: int = 37, base_chars=string.printable, num_func=N
         assert base <= len(
             base_chars), 'Not enough characters to reperesent higher int base'
 
-    strn = str(n)
+    strn = str(n) if type(n) == int else n
     mul: FunctionType = num_func or base_chars.index
     num_arr = ((base**_pow)*mul(ch) for _pow, ch in enumerate(reversed(strn)))
 
@@ -196,33 +197,3 @@ def digitify(pow_dict: dict[int, int], base: int = 2, formatter=strify, char_fun
             dig_arr[(strlen-power)] = char_func(digit)
 
     return formatter(dig_arr)
-
-#! NEEDED to DEBUG ----------------
-
-
-to_base_pixel = partial(to_anybase, base=16777216,
-                        base_chars=None, char_func=pixel)
-to_base_pixels = partial(to_anybase, base=16777216, base_chars=range(16777216))
-
-
-def pixelify(n): return digitify(to_base_pixel(n), 16777216)
-
-
-def pixelify2(n): return digitify(
-    to_base_pixels(n), 16777216, lambda n: n, pixelise)
-
-
-#! Most crucial funcs above ------------
-
-
-def binify(n, base=2): return digitify(tobase(n, base), base)
-def multify(n, base=11): return digitify(to_printable_base(n, base), base)
-
-
-def test(n=1000, base=11): return print(n == int(str(multify(n, base)), base))
-
-# test()
-
-
-# print(digitify(base_unicode(fileint('new.png'))), file=open('out.txt','w', encoding='utf-8'), end='')
-# print(from_anybase(open('out.txt', encoding='utf-8').read(), 1114111, None, ord)==fileint('new.png'))
