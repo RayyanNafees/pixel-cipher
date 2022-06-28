@@ -128,6 +128,7 @@ def pixelize_ascii(path: str, out: str = None) -> None:
     os.remove('temp.ascii')
 
 
+#! Still buggy
 def unpixelize_ascii(path: str, out: str = None) -> None:
     '''Converts the compressed file image back to the original file
 
