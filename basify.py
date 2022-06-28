@@ -2,9 +2,9 @@ from math import log
 import string
 from types import FunctionType
 from functools import partial
+from cipher import file_to_int as fileint
 
 # * NOTE THAT math.log CAN GET THE POWER OF INTEGER OF ANY BASE
-
 
 
 def pixel(n):
@@ -15,7 +15,9 @@ def pixel(n):
 
     return (r % 256, g % 256, b % 256)
 
+
 def pixelise(digits): return [pixel(d) for d in digits]
+
 
 def strify(arr): return ''.join(str(i) for i in arr)
 
@@ -131,11 +133,10 @@ def to_anybase(n: int, base: int = 37, base_chars: str = string.printable, char_
     return pow_dict
 
 
-base_ascii = partial(to_anybase, base_chars=''.join(chr(i)
-                     for i in range(0, 65536)))
+base_ascii = partial(to_anybase, base=65536, base_chars=None, char_func=chr)
 
-base_unicode = partial(to_anybase, base_chars=''.join(chr(i)
-                       for i in range(0, 1114111)))
+base_unicode = partial(to_anybase, base=1114111,
+                       base_chars=None, char_func=chr)
 
 
 #! So much vulnerability in this
@@ -151,8 +152,9 @@ def from_anybase(n: int, base: int = 37, base_chars=string.printable, num_func=N
     Returns:
         int: Returns the integer it was converted from
     '''
-    assert base <= len(
-        base_chars), 'Not enough characters to reperesent higher int base'
+    if not num_func:
+        assert base <= len(
+            base_chars), 'Not enough characters to reperesent higher int base'
 
     strn = str(n)
     mul: FunctionType = num_func or base_chars.index
@@ -220,3 +222,7 @@ def multify(n, base=11): return digitify(to_printable_base(n, base), base)
 def test(n=1000, base=11): return print(n == int(str(multify(n, base)), base))
 
 # test()
+
+
+# print(digitify(base_unicode(fileint('new.png'))), file=open('out.txt','w', encoding='utf-8'), end='')
+# print(from_anybase(open('out.txt', encoding='utf-8').read(), 1114111, None, ord)==fileint('new.png'))

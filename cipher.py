@@ -1,7 +1,7 @@
 import math
 import numpy as np
 from PIL import Image
-
+# import basify
 VAL = 2.408116385911179
 
 def mid_factor(n):
@@ -80,7 +80,7 @@ def int_to_file(num: int, path: str) -> None:
 
     f = lambda n: math.floor(n/2.408116385911179)
 
-    print(intlen, f(intlen))
+    # print(intlen, f(intlen))
 
     byts = num.to_bytes(f(intlen), byteorder='big')
 
