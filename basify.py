@@ -1,5 +1,6 @@
 from math import log
 import string
+from types import FunctionType
 from cipher import pixel
 from functools import partial
 
@@ -11,6 +12,8 @@ def pixelise(digits): return [pixel(d) for d in digits]
 
 
 def isiterable(sequence):
+    '''Checks whether a sequence is iterable or not'''
+
     try:
         iter(sequence)
     except TypeError:
@@ -143,13 +146,10 @@ def from_anybase(n: int, base: int = 37, base_chars=string.printable, num_func=N
         base_chars), 'Not enough characters to reperesent higher int base'
 
     strn = str(n)
-    num = 0
+    mul: FunctionType = num_func or base_chars.index
+    num_arr = ((base**_pow)*mul(ch) for _pow, ch in enumerate(reversed(strn)))
 
-    for _pow, ch in enumerate(reversed(strn)):
-        mul = num_func or (lambda char: base_chars.index(char))
-        num += (base**_pow)*mul(ch)
-
-    return num
+    return sum(num_arr)
 
 
 def digitify(pow_dict: dict[int, int], base: int = 2, formatter=strify, char_func=None) -> str:
@@ -210,5 +210,4 @@ def multify(n, base=11): return digitify(to_printable_base(n, base), base)
 
 def test(n=1000, base=11): return print(n == int(str(multify(n, base)), base))
 
-
-test()
+# test()
