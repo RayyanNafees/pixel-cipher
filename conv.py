@@ -1,23 +1,24 @@
-
 from string import printable
-
+from typing import Generator
+import sys
+sys.set_int_max_str_digits(10000)
 
 def file_to_int(path: str) -> int:
-    with open(path, 'rb') as file:
+    with open(path, "rb") as file:
         bytez = file.read()
 
-    return int.from_bytes(bytez, 'big')
+    return int.from_bytes(bytez, "big")
 
 
 def int_to_bytes(intdata: int) -> bytes:
-    bits = (intdata.bit_length()+7) // 8
-    bytez = intdata.to_bytes(bits, 'big')
+    bits = (intdata.bit_length() + 7) // 8
+    bytez = intdata.to_bytes(bits, "big")
     return bytez
 
 
 def int_to_file(intdata: int, filepath: str) -> None:
     bytez = int_to_bytes(intdata)
-    with open(filepath, 'wb') as file:
+    with open(filepath, "wb") as file:
         file.write(bytez)
 
 
@@ -27,27 +28,32 @@ def intfile_to_mediafile(intpath: str, mediapath: str) -> None:
 
 
 def mediafile_to_intfile(filepath: str, savepath: str) -> None:
-    bytez = open(filepath, 'rb').read()
-    intz = int.from_bytes(bytez, 'big')
-    print(intz, file=open(savepath, 'w'))
+    bytez = open(filepath, "rb").read()
+    intz = int.from_bytes(bytez, "big")
+    with open(savepath, 'w') as savefile:
+        print(intz, file=savefile)
 
 
 def toInt(intstr: str, chars: str) -> int:
     base = len(chars)
-    def ind(char): return chars.find(char)
-    dec_encoding = (ind(i)*(base**n) for n, i in enumerate(intstr[::-1]))
+
+    def ind(char):
+        return chars.find(char)
+
+    dec_encoding = (ind(i) * (base**n) for n, i in enumerate(intstr[::-1]))
     return sum(dec_encoding)
 
 
 def safe_toInt(intstr: str, chars) -> int:
-
     if type(chars) == int:
-        assert chars <= len(printable), \
-            f'integer conversions only supported till base {len(printable)} (not base {chars})'
+        assert chars <= len(
+            printable
+        ), f"integer conversions only supported till base {len(printable)} (not base {chars})"
         chars = printable[:chars]
 
-    assert all([i in chars for i in intstr]), \
-        'The supplied number has characters not in base i'
+    assert all(
+        [i in chars for i in intstr]
+    ), "The supplied number has characters not in base i"
 
     return toInt(intstr, chars)
 
@@ -56,25 +62,25 @@ def highpow(base: int, num: int) -> int:
     expo = 0
     while base**expo <= num:
         expo += 1
-    return expo-1
+    return expo - 1
 
 
 def highmul(base: int, num: int) -> int:
     mul = 0
-    while base*mul <= num:
+    while base * mul <= num:
         mul += 1
-    return mul-1
+    return mul - 1
 
 
-def highpowmul(base: int, num: int) -> dict:
+def highpowmul(base: int, num: int):
     # divs = [base**i for i in reversed(range(highpow(base, num)+1))]
-    pows = reversed(range(highpow(base, num)+1))
+    pows = reversed(range(highpow(base, num) + 1))
 
     while num:
         for p in pows:
             d = base**p
             div = highmul(d, num)
-            num -= d*div
+            num -= d * div
             yield div
 
 
@@ -87,37 +93,42 @@ def toBin(num: int) -> str:
             if div <= num:
                 pows[p] = 1
                 num -= div
-    return ''.join(str(i) for i in pows.values())
+    return "".join(str(i) for i in pows.values())
 
 
 def toTri(num: int) -> str:
     base = 3
     powmul = highpowmul(base, num)
-    return ''.join(str(v) for v in powmul)
+    return "".join(str(v) for v in powmul)
 
 
 def toBase(num: int, chars: str) -> str:
-    base = len(chars)    # chars = ''.join(str(i) for i in range(base))
+    base = len(chars)  # chars = ''.join(str(i) for i in range(base))
     powmul = highpowmul(base, num)
-    return ''.join(chars[v] for v in powmul)
+    return "".join(chars[v] for v in powmul)
 
 
 def safe_toBase(num: int, chars: str) -> str:
-
     if type(chars) == int:
-        assert chars <= len(printable), \
-            f'integer conversions only supported till base {len(printable)} (not base {chars})'
+        assert chars <= len(
+            printable
+        ), f"integer conversions only supported till base {len(printable)} (not base {chars})"
         chars = printable[:chars]
 
-    assert all([i in chars for i in str(num)]), \
-        'The supplied number has characters not in base i'
+    assert all(
+        [i in chars for i in str(num)]
+    ), "The supplied number has characters not in base i"
 
     return toBase(num, chars)
 
 
-1114111  # unicode
-65536  # ascii
+UNICODE = 1114111
+ASCII = 65536
 
 
-def toB65K(): pass
-def toB1M(): pass
+def toB65K():
+    pass
+
+
+def toB1M():
+    pass
