@@ -39,13 +39,13 @@ def fibify(big_int: int) -> list[int]:
 
     remainder = big_int
     cycles = count
-    return [remainder, cycles]
+    return [cycles, remainder]
 
 
 def fib_compress(file_path: str, out_path: str = "fib.csv") -> None:
     '''Comrpesses a file with Fibonacci Division'''
     int_data = file_to_int(file_path)
-    remainder, cycles = fibify(int_data)
+    cycles, remainder = fibify(int_data)
 
     with open(out_path, 'w', encoding='utf8') as fib_file:
         print('name,seq,cycles,rem', file=fib_file)
@@ -55,7 +55,7 @@ def fib_compress(file_path: str, out_path: str = "fib.csv") -> None:
 def csv_to_cycles_rem(file_path: str) -> list | None:
     '''Parses the Cyccles & Remainder from the CSV file'''
     with open(file_path, encoding='utf8') as csv:
-        algo, cycles, rem = csv.readlines()[1].split(',')
+        _, algo, cycles, rem = csv.readlines()[1].split(',')
 
         if algo == 'fib':
             return [int(cycles), int(rem)]
@@ -69,4 +69,4 @@ def defib(cycles: int, remainder: int) -> int:
     for current_cycle, fib_term in enumerate(fibonacci()):
         mul *= fib_term
         if current_cycle == cycles:
-            return mul + remainder
+            return mul * remainder
