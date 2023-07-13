@@ -120,12 +120,12 @@ def to_anybase(n: int, base: int = 37, base_chars: str = string.printable, char_
         mul = n//base**power    # value
 
         if not functional:
-            _mul = base_chars[mul]  # digit representation from chars
+            mul_repr = base_chars[mul]  # digit representation from chars
         else:
             # digit representation as out of func from a val
-            _mul = char_func(mul)
+            mul_repr = char_func(mul)
 
-        pow_dict[power] = _mul
+        pow_dict[power] = mul_repr
 
         n -= (base**power)*mul  # n = 4
 

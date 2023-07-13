@@ -74,7 +74,7 @@ def unpixel(rgb: tuple[int]) -> int:
         int: The numeric value of the pixel as an integer
     '''
 
-    print(rgb)
+    # print(rgb)
     r, g, b = rgb
     assert sum(rgb) < 255+255+256, 'Invalid pixel'
 

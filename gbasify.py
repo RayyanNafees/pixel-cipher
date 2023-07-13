@@ -29,15 +29,8 @@ def pixelise(digits: list[int]) -> Iterator[int, int, int]:
         yield pixel(dig)
 
 
-def isiterable(sequence):
-    '''Checks whether a sequence is iterable or not'''
-
-    try:
-        iter(sequence)
-    except TypeError:
-        return False
-    else:
-        return True
+'''Checks whether a sequence is iterable or not'''
+def isiterable(sequence): return ('__iter__' in dir(sequence))
 
 
 def tobase(n: int, base: int = 3) -> Iterator[int, int]:
@@ -48,7 +41,7 @@ def tobase(n: int, base: int = 3) -> Iterator[int, int]:
         base (int, optional): The base to convert the int to. Defaults to 3.
 
     Yields:
-        Iterator[int, int]: A pair of pwer, digit tuple to
+        Iterator[int, int]: A pair of power, digit tuple to
     '''
     assert base <= 10, 'Not yet developed for higher bases'
 
@@ -154,7 +147,8 @@ def from_anybase(n: Union[int, str, list[int]], base: int = 37, base_chars=strin
         numlen = int(log10(n))+1
 
         # Tells the digit in a number n at an indice i from back
-        dig = (lambda n, i: n//pow(10, i, 10))
+        # https://stackoverflow.com/questions/39644638/how-to-take-the-nth-digit-of-a-number-in-python
+        def dig(n,i): return n//pow(10, i) %10
 
         mul = num_func
 
