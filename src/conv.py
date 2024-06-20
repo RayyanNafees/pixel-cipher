@@ -6,6 +6,7 @@ def file_to_int(path: str) -> int:
     with open(path, 'rb') as file:
         bytez = file.read()
 
+    print(bytez)
     return int.from_bytes(bytez, 'big')
 
 
