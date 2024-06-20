@@ -4,17 +4,37 @@ import math
 PIXEL_CONST = 1677721600
 
 
-def imagine(rgba: list[tuple[int, int, int, int]], filepath="image.png"):
-    image = Image.open("image.png")  # open image
+def ten_digit_list(n: int) -> list[int]:
+    limit = pow(10, 9)
 
-    width = len(rgba[0])
-    height = len(rgba)
+    def one_in_start(n: int) -> int:
+        """makes a 9 digit number or less 10 digit number by adding 1 in starting"""
+        """Example:
+                567 becomes 1000000567 (a 10 digit number)"""
+        return 1 * pow(10, 9) + n if n < pow(10, 8) else n
 
-    for y in range(height):
-        for x in range(width):
-            image.putpixel((x, y), rgba[y][x])
+    return [one_in_start(n % limit)] + ten_digit_list(n // limit) if n > limit else [n]
 
-    image.save(filepath)
+
+def unten_digit_list(list_of_10s: list[int]) -> int:
+    digit = 0
+    limit = pow(10, 9)
+
+    def numlen(n: int) -> int:
+        return math.floor(math.log10(n)) + 1
+
+    def last(n):
+        return n == len(list_of_10s) - 1
+
+    for n, i in enumerate(list_of_10s):
+        factor = pow(limit, n)
+
+        if numlen(i) >= limit and not last(n):
+            digit += (i - limit) * factor
+        else:
+            digit += i * factor
+
+    return digit
 
 
 def pixel(n: int) -> tuple[int, int, int, int]:
@@ -38,40 +58,6 @@ def unpixel(pixel: tuple[int, int, int, int]) -> int:
     return ((r * 256 + g) * 256 + b) * 100 + a
 
 
-def numlen(n: int) -> int:
-    return math.floor(math.log10(n)) + 1
-
-
-def one_in_start(n: int) -> int:
-    """makes a 9 digit number or less 10 digit number by adding 1 in starting"""
-    """Example:
-            567 becomes 1000000567 (a 10 digit number)"""
-    return 1 * pow(10, 9) + n if n < pow(10, 8) else n
-
-
-def ten_digit_list(n: int) -> list[int]:
-    limit = pow(10, 9)
-
-    return [one_in_start(n % limit)] + ten_digit_list(n // limit) if n > limit else [n]
-
-
-def unten_digit_list(list_of_10s: list[int]) -> int:
-    digit = 0
-    limit = pow(10, 9)
-
-    def last(n):
-        return n == len(list_of_10s) - 1
-
-    for n, i in enumerate(list_of_10s):
-        factor = pow(limit, n)
-
-        if numlen(i) >= limit and not last(n):
-            digit += (i - limit) * factor
-        else:
-            digit += i * factor
-
-    return digit
-
 
 def pixelize(n) -> list[tuple[int, int, int, int]]:
     return [pixel(i) for i in ten_digit_list(n)]
@@ -79,3 +65,16 @@ def pixelize(n) -> list[tuple[int, int, int, int]]:
 
 def unpixelize(pixels: list[tuple[int, int, int, int]]) -> list[int]:
     return [unpixel(pixel) for pixel in pixels]
+
+
+def imagine(rgba: list[tuple[int, int, int, int]], filepath="image.png"):
+    image = Image.open("image.png")  # open image
+
+    width = len(rgba[0])
+    height = len(rgba)
+
+    for y in range(height):
+        for x in range(width):
+            image.putpixel((x, y), rgba[y][x])
+
+    image.save(filepath)
